@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String jwt = authorizationHeader.substring(7); // Extract JWT token after "Bearer "
-        String username = null;
+        String username;
 
         try {
             // Attempt to extract username from the token

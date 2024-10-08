@@ -1,13 +1,12 @@
 package org.example.project_management.dto;
 
+import lombok.Getter;
+
+@Getter
 public class RefreshTokenResponse {
-    private String accessToken;
+    private final String accessToken;
 
     public RefreshTokenResponse(String accessToken) {
         this.accessToken = accessToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
     }
 }
