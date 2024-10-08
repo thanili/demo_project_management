@@ -1,7 +1,8 @@
 package org.example.project_management.exception;
 
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,11 +10,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ClientNotFoundException.class)
     public ResponseEntity<String> handleClientNotFound(ClientNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
@@ -34,14 +38,24 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(MalformedJwtException.class)
-    public ResponseEntity<String> handleMalformedJwtException(MalformedJwtException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT processing error: " + ex.getMessage());
-    }
-
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<String> handleJwtException(JwtException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT processing error: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<String> handleTokenExpiredException(TokenExpiredException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token expired: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<String> handleSignatureException(SignatureException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid JWT signature: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT token is missing or incorrect: " + ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -59,6 +73,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
+        logger.error("Unexpected error occurred: ", ex);
         return new ResponseEntity<>("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

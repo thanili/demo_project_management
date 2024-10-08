@@ -16,17 +16,31 @@ import java.util.Map;
 public class JwtUtils {
     @Value("${org.example.project_management.jwt.secret}")
     private String secret;
-    @Value("${org.example.project_management.jwt.expiration}")
-    private String expirationTimeMs;
+    @Value("${org.example.project_management.jwt.accesss.expiration}")
+    private String accessTokenExpirationTimeMs;
+    @Value("${org.example.project_management.jwt.refresh.expiration}")
+    private String refreshTokenExpirationTimeMs;
 
-    // Generate a JWT token
-    public String generateToken(String username) {
+    // Generate a JWT access token
+    public String generateAccessToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + Integer.parseInt(expirationTimeMs)))
+                .setExpiration(new Date((new Date()).getTime() + Integer.parseInt(accessTokenExpirationTimeMs)))
+                .signWith(SignatureAlgorithm.HS384, secret)
+                .compact();
+    }
+
+    // Generate a JWT refresh token
+    public String generateRefreshToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + Integer.parseInt(refreshTokenExpirationTimeMs)))
                 .signWith(SignatureAlgorithm.HS384, secret)
                 .compact();
     }

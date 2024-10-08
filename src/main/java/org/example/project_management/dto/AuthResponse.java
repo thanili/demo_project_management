@@ -1,13 +1,19 @@
 package org.example.project_management.dto;
 
 public class AuthResponse {
-    private String jwt;
+    private String accessToken;
+    private String refreshToken;
 
-    public AuthResponse(String jwt) {
-        this.jwt = jwt;
+    public AuthResponse(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
-    public String getJwt() {
-        return jwt;
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 }
