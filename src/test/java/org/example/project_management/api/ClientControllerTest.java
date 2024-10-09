@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.project_management.dto.ClientDto;
 import org.example.project_management.entity.Client;
 import org.example.project_management.helper.EntityDtoConverter;
-import org.example.project_management.service.data.ClientService;
+import org.example.project_management.security.JwtUtils;
+import org.example.project_management.service.ClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -38,9 +40,13 @@ public class ClientControllerTest {
 
     @MockBean
     private ClientService clientService;
-
     @MockBean
     private EntityDtoConverter entityDtoConverter;
+
+    @MockBean
+    private JwtUtils jwtUtils;
+    @MockBean
+    UserDetailsService userDetailsService;
 
     private Client client;
     private ClientDto clientDto;
@@ -112,6 +118,6 @@ public class ClientControllerTest {
         doNothing().when(clientService).deleteClient(1L);
 
         mockMvc.perform(delete("/api/clients/1"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 }

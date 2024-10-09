@@ -1,4 +1,4 @@
-package org.example.project_management.service.data;
+package org.example.project_management.service;
 
 import org.example.project_management.entity.Invoice;
 

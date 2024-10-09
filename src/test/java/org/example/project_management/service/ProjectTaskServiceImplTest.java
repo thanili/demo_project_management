@@ -1,9 +1,10 @@
 package org.example.project_management.service;
 
+import org.example.project_management.entity.Project;
 import org.example.project_management.entity.ProjectTask;
 import org.example.project_management.exception.ProjectTaskNotFoundException;
 import org.example.project_management.repository.ProjectTaskRepository;
-import org.example.project_management.service.data.impl.ProjectTaskServiceImpl;
+import org.example.project_management.service.impl.ProjectTaskServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,12 +29,21 @@ public class ProjectTaskServiceImplTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        Project project = new Project();
+        project.setId(1L);
+        project.setStartDate(java.time.LocalDate.now().minusMonths(1));
+        project.setDeadline(java.time.LocalDate.now().plusMonths(1));
+        project.setStatus("IN_PROGRESS");
+        project.setTitle("Project 1");
+
         projectTask = new ProjectTask();
         projectTask.setId(1L);
         projectTask.setTitle("Project Task 1");
         projectTask.setStatus("IN_PROGRESS");
         projectTask.setDescription("Description 1");
         projectTask.setDueDate(java.time.LocalDate.now().plusDays(10));
+        projectTask.setProject(project);
     }
 
     @Test

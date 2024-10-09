@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.example.project_management.dto.ProjectDto;
 import org.example.project_management.entity.Project;
 import org.example.project_management.helper.EntityDtoConverter;
-import org.example.project_management.service.data.ProjectService;
+import org.example.project_management.service.ProjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +58,9 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProject(@PathVariable Long id) {
         logger.info("Request to delete project by Id received: {}", id);
         projectService.deleteProject(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Project deleted successfully");
     }
 }

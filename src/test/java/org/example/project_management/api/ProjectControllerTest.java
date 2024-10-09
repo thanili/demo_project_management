@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.project_management.dto.ProjectDto;
 import org.example.project_management.entity.Project;
 import org.example.project_management.helper.EntityDtoConverter;
-import org.example.project_management.service.data.ProjectService;
+import org.example.project_management.security.JwtUtils;
+import org.example.project_management.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -37,6 +39,11 @@ public class ProjectControllerTest {
 
     @MockBean
     private EntityDtoConverter entityDtoConverter;
+
+    @MockBean
+    private JwtUtils jwtUtils;
+    @MockBean
+    UserDetailsService userDetailsService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -117,6 +124,6 @@ public class ProjectControllerTest {
         doNothing().when(projectService).deleteProject(1L);
 
         mockMvc.perform(delete("/api/projects/1"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 }

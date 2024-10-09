@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.example.project_management.dto.InvoiceDto;
 import org.example.project_management.entity.Invoice;
 import org.example.project_management.helper.EntityDtoConverter;
-import org.example.project_management.service.data.InvoiceService;
+import org.example.project_management.service.InvoiceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +58,9 @@ public class InvoiceController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {
+    public ResponseEntity<?> deleteInvoice(@PathVariable Long id) {
         logger.info("Request to delete invoice by Id received: {}", id);
         invoiceService.deleteInvoice(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Invoice deleted successfully");
     }
 }

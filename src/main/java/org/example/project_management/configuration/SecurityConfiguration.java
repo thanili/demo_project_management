@@ -16,12 +16,22 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
+/**
+ * Security configuration class for setting up Spring Security.
+ */
 @Configuration
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+    /**
+     * Constructor for SecurityConfiguration.
+     *
+     * @param jwtAuthenticationFilter the JWT authentication filter
+     * @param userDetailsService the user details service
+     * @param customAuthenticationEntryPoint the custom authentication entry point
+     */
     @Autowired
     public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
@@ -29,6 +39,13 @@ public class SecurityConfiguration {
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
+    /**
+     * Configures the security filter chain.
+     *
+     * @param http the HttpSecurity object
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -38,10 +55,13 @@ public class SecurityConfiguration {
                 // Define authorization rules
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll() // Public access to authentication endpoints
+                        .requestMatchers("/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**").permitAll() // Allow access to Swagger UI and OpenAPI docs
                         .anyRequest().authenticated() // Secure all other endpoints
                 )
 
-                // Ensure that the session management is stateless for JWT
+                // SessionCreationPolicy.STATELESS ensures that no HTTP sessions are created, as JWT is stateless and doesn't rely on sessions.
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -57,13 +77,23 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    // AuthenticationManager is used for authentication
+    /**
+     * Bean for AuthenticationManager used for authentication.
+     *
+     * @param authenticationConfiguration the authentication configuration
+     * @return the AuthenticationManager
+     * @throws Exception if an error occurs
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // Password encoder for encrypting passwords (BCrypt)
+    /**
+     * Bean for PasswordEncoder used for encrypting passwords (BCrypt).
+     *
+     * @return the PasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

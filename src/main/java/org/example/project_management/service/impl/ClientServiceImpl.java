@@ -1,10 +1,10 @@
-package org.example.project_management.service.data.impl;
+package org.example.project_management.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.example.project_management.entity.Client;
 import org.example.project_management.exception.ClientNotFoundException;
 import org.example.project_management.repository.ClientRepository;
-import org.example.project_management.service.data.ClientService;
+import org.example.project_management.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,23 +52,20 @@ public class ClientServiceImpl implements ClientService {
 
         if(clientDetails.getName() != null)
             client.setName(clientDetails.getName());
-        else
-            client.setName(client.getName());
 
         if(clientDetails.getEmail() != null)
             client.setEmail(clientDetails.getEmail());
-        else
-            client.setEmail(client.getEmail());
 
         if(clientDetails.getPhone() != null)
             client.setPhone(clientDetails.getPhone());
-        else
-            client.setPhone(client.getPhone());
 
-        if(clientDetails.getProjects() != null && !clientDetails.getProjects().isEmpty())
-            client.setProjects(clientDetails.getProjects());
-        else
-            client.setProjects(client.getProjects());
+        if(clientDetails.getProjects() != null) {
+            client.getProjects().clear();
+            client.getProjects().addAll(clientDetails.getProjects());
+        } else {
+            // If no projects are provided, keep the existing ones
+            // client.setProjects(client.getProjects());
+        }
 
         return clientRepository.save(client);
     }

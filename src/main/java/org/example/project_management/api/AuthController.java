@@ -1,9 +1,9 @@
 package org.example.project_management.api;
 
 import jakarta.validation.Valid;
-import org.example.project_management.dto.AuthRequest;
-import org.example.project_management.dto.AuthResponse;
-import org.example.project_management.dto.RefreshTokenResponse;
+import org.example.project_management.dto.auth.AuthRequest;
+import org.example.project_management.dto.auth.AuthResponse;
+import org.example.project_management.dto.auth.RefreshTokenResponse;
 import org.example.project_management.security.CustomUserDetailsService;
 import org.example.project_management.security.JwtUtils;
 import org.slf4j.Logger;

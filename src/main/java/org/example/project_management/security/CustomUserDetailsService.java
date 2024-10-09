@@ -12,17 +12,29 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 /**
- * Load user details from the database and use it for authentication
+ * Service to load user details from the database and use it for authentication.
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
+    /**
+     * Constructor for CustomUserDetailsService.
+     *
+     * @param userRepository the user repository
+     */
     @Autowired
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Loads the user by username.
+     *
+     * @param username the username of the user
+     * @return UserDetails containing user information
+     * @throws UsernameNotFoundException if the user is not found
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utility class for JWT operations: generating, parsing, and validating JWT tokens
+ * Utility class for JWT operations: generating, parsing, and validating JWT tokens.
  */
 @Component
 public class JwtUtils {
@@ -21,7 +21,12 @@ public class JwtUtils {
     @Value("${org.example.project_management.jwt.refresh.expiration}")
     private String refreshTokenExpirationTimeMs;
 
-    // Generate a JWT access token
+    /**
+     * Generates a JWT access token for the given username.
+     *
+     * @param username the username for which the token is generated
+     * @return the generated JWT access token
+     */
     public String generateAccessToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
@@ -33,7 +38,12 @@ public class JwtUtils {
                 .compact();
     }
 
-    // Generate a JWT refresh token
+    /**
+     * Generates a JWT refresh token for the given username.
+     *
+     * @param username the username for which the token is generated
+     * @return the generated JWT refresh token
+     */
     public String generateRefreshToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
@@ -45,17 +55,34 @@ public class JwtUtils {
                 .compact();
     }
 
-    // Extract username from token
+    /**
+     * Extracts the username from the given JWT token.
+     *
+     * @param token the JWT token
+     * @return the username extracted from the token
+     */
     public String extractUsername(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    // Validate token
+    /**
+     * Validates the given JWT token against the provided username.
+     *
+     * @param token the JWT token
+     * @param username the username to validate against
+     * @return true if the token is valid and matches the username, false otherwise
+     */
     public boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
 
+    /**
+     * Checks if the given JWT token is expired.
+     *
+     * @param token the JWT token
+     * @return true if the token is expired, false otherwise
+     */
     private boolean isTokenExpired(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getExpiration().before(new Date());
     }

@@ -8,7 +8,6 @@ import org.example.project_management.entity.Client;
 import org.example.project_management.entity.Invoice;
 import org.example.project_management.entity.Project;
 import org.example.project_management.entity.ProjectTask;
-import org.example.project_management.exception.ClientNotFoundException;
 import org.example.project_management.exception.InvoiceNotFoundException;
 import org.example.project_management.exception.ProjectNotFoundException;
 import org.example.project_management.exception.ProjectTaskNotFoundException;
@@ -53,16 +52,18 @@ public class EntityDtoConverter {
         client.setName(clientDto.getName());
         client.setEmail(clientDto.getEmail());
         client.setPhone(clientDto.getPhone());
-        List<Project> projects = new ArrayList<>();
-        clientDto.getProjectIds().forEach(projectId -> {
-            Project project = projectRepository.findById(projectId)
-                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
-            projects.add(project);
-        });
-        // Consider creating a method to get all projects of a client (in projectRepository)
-        //projects = projectRepository.findAllByClientId(client.getId());
 
+        List<Project> projects = new ArrayList<>();
+        // To create a client one or more projects are NOT required
+        if (clientDto.getProjectIds() != null && !clientDto.getProjectIds().isEmpty()) {
+            clientDto.getProjectIds().forEach(projectId -> {
+                Project project = projectRepository.findById(projectId)
+                        .orElseThrow(() -> new ProjectNotFoundException("Project {" + projectId + "} not found during ClientDto to Client conversion"));
+                projects.add(project);
+            });
+        }
         client.setProjects(projects);
+
         return client;
     }
 
@@ -83,10 +84,16 @@ public class EntityDtoConverter {
         invoice.setAmount(invoiceDto.getAmount());
         invoice.setStatus(invoiceDto.getStatus());
         invoice.setDueDate(invoiceDto.getDueDate());
-        Project project = projectRepository.findById(invoiceDto.getProjectId())
-                .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found"));
-        invoice.setProject(project);
-        return invoice;
+
+        // To create an invoice a project is required
+        if (invoiceDto.getProjectId() == null) {
+            throw new ProjectNotFoundException("Project ID is required for InvoiceDto to Invoice conversion");
+        } else {
+            Project project = projectRepository.findById(invoiceDto.getProjectId())
+                    .orElseThrow(() -> new ProjectNotFoundException("Project {" + invoiceDto.getProjectId() + "} not found during InvoiceDto to Invoice conversion"));
+            invoice.setProject(project);
+            return invoice;
+        }
     }
 
     public List<InvoiceDto> convertInvoicesToInvoiceDtos(List<Invoice> invoices) {
@@ -117,26 +124,35 @@ public class EntityDtoConverter {
         project.setDeadline(projectDto.getDeadline());
         project.setStatus(projectDto.getStatus());
 
-        Client client = clientRepository.findById(projectDto.getClientId())
-                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-        project.setClient(client);
+        // To create a project a client is required
+        if(projectDto.getClientId() == null) {
+            throw new ProjectNotFoundException("Client ID is required for ProjectDto to Project conversion");
+        } else {
+            Client client = clientRepository.findById(projectDto.getClientId())
+                    .orElseThrow(() -> new ProjectNotFoundException("Client {" + projectDto.getClientId() + "} not found during ProjectDto to Project conversion"));
+            project.setClient(client);
+        }
 
-        // Consider creating a method to get all projectTasks of a project (in projectRepository)
+        // To create a project one or more tasks are NOT required
         List<ProjectTask> tasks = new ArrayList<>();
-        projectDto.getTaskIds().forEach(taskId -> {
-            ProjectTask task = projectTaskRepository.findById(taskId)
-                    .orElseThrow(() -> new ProjectTaskNotFoundException("Project Task not found"));
-            tasks.add(task);
-        });
+        if(projectDto.getTaskIds() != null && !projectDto.getTaskIds().isEmpty()) {
+            projectDto.getTaskIds().forEach(taskId -> {
+                ProjectTask task = projectTaskRepository.findById(taskId)
+                        .orElseThrow(() -> new ProjectTaskNotFoundException("Project Task {" + taskId + "} not found during ProjectDto to Project conversion"));
+                tasks.add(task);
+            });
+        }
         project.setTasks(tasks);
 
-        // Consider creating a method to get all invoices for a project (in projectRepository)
+        // To create a project one or more invoices are NOT required
         List<Invoice> invoices = new ArrayList<>();
-        projectDto.getInvoiceIds().forEach(invoiceId -> {
-            Invoice invoice = invoiceRepository.findById(invoiceId)
-                    .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found"));
-            invoices.add(invoice);
-        });
+        if(projectDto.getInvoiceIds() != null && !projectDto.getInvoiceIds().isEmpty()) {
+            projectDto.getInvoiceIds().forEach(invoiceId -> {
+                Invoice invoice = invoiceRepository.findById(invoiceId)
+                        .orElseThrow(() -> new InvoiceNotFoundException("Invoice {" + invoiceId + "} not found during ProjectDto to Project conversion"));
+                invoices.add(invoice);
+            });
+        }
         project.setInvoices(invoices);
 
         return project;
@@ -160,10 +176,16 @@ public class EntityDtoConverter {
         projectTask.setDescription(projectTaskDto.getDescription());
         projectTask.setDueDate(projectTaskDto.getDueDate());
         projectTask.setStatus(projectTaskDto.getStatus());
-        Project project = projectRepository.findById(projectTaskDto.getProjectId())
-                .orElseThrow(() -> new ProjectTaskNotFoundException("Project Task not found"));
-        projectTask.setProject(project);
-        return projectTask;
+
+        // To create a project task a project is required
+        if(projectTaskDto.getProjectId() == null) {
+            throw new ProjectTaskNotFoundException("Project ID is required for ProjectTaskDto to ProjectTask conversion");
+        } else {
+            Project project = projectRepository.findById(projectTaskDto.getProjectId())
+                    .orElseThrow(() -> new ProjectTaskNotFoundException("Project {" + projectTaskDto.getProjectId() + "} not found during ProjectTaskDto to ProjectTask conversion"));
+            projectTask.setProject(project);
+            return projectTask;
+        }
     }
 
     public List<ProjectTaskDto> convertProjectTasksToProjectTaskDtos(List<ProjectTask> projectTasks) {

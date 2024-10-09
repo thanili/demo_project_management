@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.example.project_management.dto.ProjectTaskDto;
 import org.example.project_management.entity.ProjectTask;
 import org.example.project_management.helper.EntityDtoConverter;
-import org.example.project_management.service.data.ProjectTaskService;
+import org.example.project_management.service.ProjectTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +58,9 @@ public class ProjectTaskController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProjectTask(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProjectTask(@PathVariable Long id) {
         logger.info("Request to delete project task by Id received: {}", id);
         projectTaskService.deleteProjectTask(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Project Task deleted successfully");
     }
 }

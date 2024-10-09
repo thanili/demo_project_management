@@ -1,10 +1,11 @@
-package org.example.project_management.service.data.impl;
+package org.example.project_management.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.example.project_management.entity.Invoice;
 import org.example.project_management.exception.InvoiceNotFoundException;
+import org.example.project_management.exception.ProjectNotFoundException;
 import org.example.project_management.repository.InvoiceRepository;
-import org.example.project_management.service.data.InvoiceService;
+import org.example.project_management.service.InvoiceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Transactional
     public Invoice saveInvoice(Invoice invoice) {
         logger.info("Creating a new invoice with amount: {}", invoice.getAmount());
+        if(invoice.getProject() == null) {
+            throw new ProjectNotFoundException("Project is mandatory for an invoice");
+        }
         return invoiceRepository.save(invoice);
     }
 
@@ -52,23 +56,15 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         if(invoiceDetails.getAmount() != null)
             invoice.setAmount(invoiceDetails.getAmount());
-        else
-            invoice.setAmount(invoice.getAmount());
 
         if(invoiceDetails.getStatus() != null)
             invoice.setStatus(invoiceDetails.getStatus());
-        else
-            invoice.setStatus(invoice.getStatus());
 
         if(invoiceDetails.getDueDate() != null)
             invoice.setDueDate(invoiceDetails.getDueDate());
-        else
-            invoice.setDueDate(invoice.getDueDate());
 
         if(invoiceDetails.getProject() != null)
             invoice.setProject(invoiceDetails.getProject());
-        else
-            invoice.setProject(invoice.getProject());
 
         return invoiceRepository.save(invoice);
     }

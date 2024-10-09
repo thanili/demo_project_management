@@ -1,10 +1,11 @@
-package org.example.project_management.service.data.impl;
+package org.example.project_management.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.example.project_management.entity.ProjectTask;
+import org.example.project_management.exception.ProjectNotFoundException;
 import org.example.project_management.exception.ProjectTaskNotFoundException;
 import org.example.project_management.repository.ProjectTaskRepository;
-import org.example.project_management.service.data.ProjectTaskService;
+import org.example.project_management.service.ProjectTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
     @Transactional
     public ProjectTask saveProjectTask(ProjectTask projectTask) {
         logger.info("Creating a new project task: {}", projectTask.getTitle());
+        if(projectTask.getProject() == null) {
+            throw new ProjectNotFoundException("Project is mandatory for a project task");
+        }
         return projectTaskRepository.save(projectTask);
     }
 
@@ -52,12 +56,16 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 
         if(projectTaskDetails.getTitle() != null)
             projectTask.setTitle(projectTaskDetails.getTitle());
+
         if(projectTaskDetails.getDueDate() != null)
             projectTask.setDueDate(projectTaskDetails.getDueDate());
+
         if(projectTaskDetails.getProject() != null)
             projectTask.setProject(projectTaskDetails.getProject());
+
         if(projectTaskDetails.getStatus() != null)
             projectTask.setStatus(projectTaskDetails.getStatus());
+
         if(projectTaskDetails.getDescription() != null)
             projectTask.setDescription(projectTaskDetails.getDescription());
 

@@ -1,7 +1,6 @@
 package org.example.project_management.repository;
 
 import org.example.project_management.entity.Client;
-import org.example.project_management.exception.ClientNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -52,10 +51,5 @@ public class ClientRepositoryTest {
 
         Optional<Client> deletedClient = clientRepository.findById(savedClient.getId());
         assertFalse(deletedClient.isPresent());
-    }
-
-    @Test
-    public void testDeleteNonExistentClient() {
-        assertThrows(ClientNotFoundException.class, () -> clientRepository.deleteById(999L));
     }
 }

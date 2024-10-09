@@ -1,9 +1,10 @@
 package org.example.project_management.service;
 
+import org.example.project_management.entity.Client;
 import org.example.project_management.entity.Project;
 import org.example.project_management.exception.ProjectNotFoundException;
 import org.example.project_management.repository.ProjectRepository;
-import org.example.project_management.service.data.impl.ProjectServiceImpl;
+import org.example.project_management.service.impl.ProjectServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,12 +29,21 @@ public class ProjectServiceImplTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        Client client = new Client();
+        client.setId(1L);
+        client.setName("Client 1");
+        client.setEmail("client1@test.com");
+        client.setPhone("1234567890");
+
         project = new Project();
         project.setId(1L);
         project.setTitle("Project 1");
         project.setStatus("IN_PROGRESS");
         project.setDeadline(java.time.LocalDate.now().plusMonths(1));
         project.setStartDate(java.time.LocalDate.now().minusMonths(1));
+        project.setDescription("Description 1");
+        project.setClient(client);
     }
 
     @Test

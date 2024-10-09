@@ -3,7 +3,7 @@ package org.example.project_management.service;
 import org.example.project_management.entity.Client;
 import org.example.project_management.exception.ClientNotFoundException;
 import org.example.project_management.repository.ClientRepository;
-import org.example.project_management.service.data.impl.ClientServiceImpl;
+import org.example.project_management.service.impl.ClientServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

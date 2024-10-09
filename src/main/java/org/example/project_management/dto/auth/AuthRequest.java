@@ -1,4 +1,4 @@
-package org.example.project_management.dto;
+package org.example.project_management.dto.auth;
 
 import lombok.Getter;
 
