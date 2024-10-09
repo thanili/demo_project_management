@@ -176,6 +176,13 @@ Response:
 * **CustomUserDetailsService**: Loads user details from the database for authentication.
 * **AuthController**: Provides APIs for login and token generation.
 
+## Authorization
+**TO DO**: Implement role based access control (RBAC) using Spring Security to restrict access to certain endpoints based on user roles.
+
+Roles:
+* **ROLE_USER**: Default role for authenticated users (read).
+* **ROLE_ADMIN**: Admin role with additional privileges (create, update, delete, read).
+
 ## Exception Handling
 
 **GlobalExceptionHandler**: 
