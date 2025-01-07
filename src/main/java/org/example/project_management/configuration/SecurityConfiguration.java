@@ -61,7 +61,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/resources/**", "/static/**", "/css/**", "/favicon.ico").permitAll()
+                        //.requestMatchers("/resources/**", "/static/**", "/css/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

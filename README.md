@@ -1,7 +1,7 @@
 # Freelance Project Management API
 
 ## Description
-Freelancers often manage multiple clients and projects simultaneously, making it challenging to keep track of deadlines, deliverables, communications, and payments. This API provides a simple, personalized solution for organizing freelance workflows, without the complexity and cost of enterprise-level software.
+Freelancers often manage multiple clients and projects simultaneously, making it challenging to keep track of deadlines, deliverables, communications, and payments. This project provides a combined API and UI solution for organizing freelance workflows, without the complexity and cost of enterprise-level software.
 
 ## Objective
 The **Freelance Project Management API** is built using Spring Boot to allow freelancers to:
@@ -12,10 +12,11 @@ The **Freelance Project Management API** is built using Spring Boot to allow fre
 * Track invoices, payments, and outstanding balances for projects.
 * Set project deadlines and receive alerts for overdue tasks.
 
-The API follows **RESTful principles**, utilizes JSON for data exchange, and is designed for future scalability with features like reporting or client notifications.
+The platform includes both API endpoints and a web-based UI for intuitive interaction.
 
 ## Technologies and Libraries Used
 
+### Backend:
 * **Spring Boot**: Core framework for building the RESTful API.
 * **Spring Data JPA**: Object-relational mapping (ORM) for database interactions.
 * **Spring Security**: For authentication and role-based access control (optional, if security features are included).
@@ -23,6 +24,11 @@ The API follows **RESTful principles**, utilizes JSON for data exchange, and is 
 * **Jackson**: Handles JSON serialization and deserialization.
 * **Swagger/OpenAPI**: Provides interactive API documentation.
 * **JUnit**: For unit and integration tests to ensure API functionality.
+
+### Frontend:
+
+* **Thymeleaf**: For server-side rendering of HTML templates.
+* **CSS**: For styling the UI.
 
 ## API Endpoints
 
@@ -76,6 +82,31 @@ This feature provides authentication to secure data, especially when handling se
 
 **TO DO**: Implement pagination and sorting for endpoints that return lists of data, such as clients, projects, and tasks.
 
+## UI Layer
+
+### UI Templates
+* `login.html`: Template for user authentication.
+* `clients.html`: Displays a list of clients.
+* `edit-client.html`: Form to create or update a client.
+* `client-projects.html`: Displays a list of projects for a specific client.
+* `edit-project.html`: Form to create or update a project.
+* `project-tasks.html`: Displays a list of tasks for a specific project.
+* `edit-task.html`: Form to create or update a task.
+* `project-invoices.html`: Displays a list of invoices for a specific project.
+* `edit-invoice.html`: Form to create or update an invoice.
+
+**Features:**
+* Navigation menus with links to core functionalities.
+* User-friendly forms for CRUD operations.
+* Logout functionality integrated into the navigation bar.
+
+### Web Controllers
+* `LoginWebController`: Handles login-related pages.
+* `ClientWebController`: Manages client-related pages.
+* `ProjectWebController`: Manages project-related pages.
+* `InvoiceWebController`: Manages invoice-related pages.
+* `ProjectTaskWebController`: Manages task-related pages.
+
 ## Entities
 
 ### 1. Client Entity
@@ -112,10 +143,14 @@ Represents payment tracking for a freelancer's services in relation to a project
 
 ### Authentication
 
-The API is protected using JWT (JSON Web Token) for token-based authentication, involving both access tokens (short-lived) and refresh tokens (long-lived).
+The **API** is protected using **JWT (JSON Web Token) for token-based authentication**, involving both access tokens (short-lived) and refresh tokens (long-lived).
 
 * **Access tokens**: Used for short-term access to protected resources (e.g., 15 minutes).
 * **Refresh tokens**: Used to request new access tokens when the current one expires (e.g., 7 days).
+
+The **UI** is protected using **form-based login with session management**.
+* Custom login page (`/hub/login`).
+* Logout functionality (`/hub/logout`).
 
 ### JWT Authentication Flow
 
@@ -169,7 +204,7 @@ Response:
 * If the refresh token has expired, the user must log in again.
 
 ### Key Classes
-* **SecurityConfiguration**: Configures security settings for Spring Security.
+* **SecurityConfiguration**: Configures security settings for Spring Security. To handle both API and UI authentication two different SecurityFilterChain beans have been implemented.
 * **JwtAuthenticationFilter**: Intercepts and validates JWT tokens for authentication.
 * **JwtUtils**: Provides utility methods for generating, parsing, and validating JWT tokens.
 * **CustomUserDetails**: Custom implementation of UserDetails for Spring Security.
