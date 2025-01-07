@@ -4,10 +4,7 @@ import org.example.project_management.dto.ClientDto;
 import org.example.project_management.dto.InvoiceDto;
 import org.example.project_management.dto.ProjectDto;
 import org.example.project_management.dto.ProjectTaskDto;
-import org.example.project_management.entity.Client;
-import org.example.project_management.entity.Invoice;
-import org.example.project_management.entity.Project;
-import org.example.project_management.entity.ProjectTask;
+import org.example.project_management.entity.*;
 import org.example.project_management.exception.InvoiceNotFoundException;
 import org.example.project_management.exception.ProjectNotFoundException;
 import org.example.project_management.exception.ProjectTaskNotFoundException;
@@ -75,14 +72,14 @@ public class EntityDtoConverter {
 
     public InvoiceDto convertInvoiceToInvoiceDto(Invoice invoice) {
         InvoiceDto invoiceDto =
-                new InvoiceDto(invoice.getId(), invoice.getAmount(), invoice.getDueDate(), invoice.getStatus(), invoice.getProject().getId());
+                new InvoiceDto(invoice.getId(), invoice.getAmount(), invoice.getDueDate(), invoice.getStatus().getDisplayName(), invoice.getProject().getId());
         return invoiceDto;
     }
 
     public Invoice convertInvoiceDtoToInvoice(InvoiceDto invoiceDto) {
         Invoice invoice = new Invoice();
         invoice.setAmount(invoiceDto.getAmount());
-        invoice.setStatus(invoiceDto.getStatus());
+        invoice.setStatus(InvoiceStatus.valueOf(invoiceDto.getStatus()));
         invoice.setDueDate(invoiceDto.getDueDate());
 
         // To create an invoice a project is required
@@ -111,7 +108,7 @@ public class EntityDtoConverter {
         project.getInvoices().forEach(invoice -> invoiceIds.add(invoice.getId()));
 
         ProjectDto projectDto =
-                new ProjectDto(project.getId(), project.getTitle(), project.getDescription(), project.getStartDate(), project.getDeadline(), project.getStatus(), project.getClient().getId(), taskIds, invoiceIds);
+                new ProjectDto(project.getId(), project.getTitle(), project.getDescription(), project.getStartDate(), project.getDeadline(), project.getStatus().getDisplayName(), project.getClient().getId(), taskIds, invoiceIds);
 
         return projectDto;
     }
@@ -122,7 +119,7 @@ public class EntityDtoConverter {
         project.setDescription(projectDto.getDescription());
         project.setStartDate(projectDto.getStartDate());
         project.setDeadline(projectDto.getDeadline());
-        project.setStatus(projectDto.getStatus());
+        project.setStatus(ProjectStatus.valueOf(projectDto.getStatus()));
 
         // To create a project a client is required
         if(projectDto.getClientId() == null) {
@@ -166,7 +163,7 @@ public class EntityDtoConverter {
 
     public ProjectTaskDto convertProjectTaskToProjectTaskDto(ProjectTask projectTask) {
         ProjectTaskDto projectTaskDto =
-                new ProjectTaskDto(projectTask.getId(), projectTask.getTitle(), projectTask.getDescription(), projectTask.getDueDate(), projectTask.getStatus(), projectTask.getProject().getId());
+                new ProjectTaskDto(projectTask.getId(), projectTask.getTitle(), projectTask.getDescription(), projectTask.getDueDate(), projectTask.getStatus().getDisplayName(), projectTask.getProject().getId());
         return projectTaskDto;
     }
 
@@ -175,7 +172,7 @@ public class EntityDtoConverter {
         projectTask.setTitle(projectTaskDto.getTitle());
         projectTask.setDescription(projectTaskDto.getDescription());
         projectTask.setDueDate(projectTaskDto.getDueDate());
-        projectTask.setStatus(projectTaskDto.getStatus());
+        projectTask.setStatus(TaskStatus.valueOf(projectTaskDto.getStatus()));
 
         // To create a project task a project is required
         if(projectTaskDto.getProjectId() == null) {

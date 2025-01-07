@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link th:href="@{/css/list-stylesheet.css}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Projects</title>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" th:href="@{/hub/clients}">Clients</a>
+        <!-- Logout Link -->
+        <a th:href="@{/hub/logout}" class="logout" style="float:right;">Logout</a>
+    </div>
+
+    <div class="container">
+
+        <h2 th:text="'Projects of client: ' + ${client.id}"></h2>
+
+        <!-- Toolbar Section -->
+        <div class="toolbar">
+            <a role="button" class="add-button" th:href="@{/hub/clients/{clientId}/projects/new(clientId=${client.id})}">Add New Project</a>
+        </div>
+
+        <table id="table">
+            <tr class="head">
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Start</th>
+                <th>Deadline</th>
+                <th></th>
+            </tr>
+            <tr th:each="project : ${projects}">
+                <td th:text="${project.id}"></td>
+                <td th:text="${project.title}"></td>
+                <td th:text="${project.description}"></td>
+                <td th:text="${project.status.getDisplayName()}"></td>
+                <td type="date" th:text="${project.startDate}"></td>
+                <td type="date" th:text="${project.deadline}"></td>
+                <td>
+                    <!-- Link to View Project's Tasks -->
+                    <a role="button" class="update"
+                       th:href="@{/hub/projects/{id}/tasks(id=${project.id})}">Tasks</a>
+                    <!-- Link to View Project's Invoices -->
+                    <a role="button" class="update"
+                       th:href="@{/hub/projects/{id}/invoices(id=${project.id})}">Invoices</a>
+                    <!-- Link to Edit Project -->
+                    <a role="button" class="update"
+                       th:href="@{/hub/projects/{id}/edit(id=${project.id})}">Update</a>
+                    <!-- Link to Delete Project -->
+                    <form th:action="@{/hub/projects/{id}/delete(id=${project.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="update">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link th:href="@{/css/form-stylesheet.css}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Edit Invoice</title>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" th:href="@{/hub/clients}">Clients</a>
+    </div>
+    <div class="container">
+        <h2 th:text="${invoice.id != null ? 'Edit Invoice' : 'Add New Invoice'}">Edit Invoice</h2>
+        <form method="post" th:object="${invoice}" th:action="@{/hub/invoices/handleSubmit}">
+            <label>Amount</label><input type="number" placeholder="Amount" th:field="*{amount}" required>
+            <!--<label>Status</label><input type="text" placeholder="Status" th:field="*{status}" required>-->
+            <select th:field="*{status}">
+                <option th:each="status : ${T(org.example.project_management.entity.InvoiceStatus).values()}"
+                        th:value="${status}"
+                        th:text="${status.displayName}">
+                </option>
+            </select>
+            <label>Due Date</label><input type="date" placeholder="Due Date" th:field="*{dueDate}" required>
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{project.id}">
+            <br><br>
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+</body>
+</html>

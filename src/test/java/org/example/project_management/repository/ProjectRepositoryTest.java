@@ -2,6 +2,7 @@ package org.example.project_management.repository;
 
 import org.example.project_management.entity.Client;
 import org.example.project_management.entity.Project;
+import org.example.project_management.entity.ProjectStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class ProjectRepositoryTest {
         project.setDescription("Redesign the corporate website");
         project.setStartDate(LocalDate.now());
         project.setDeadline(LocalDate.now().plusMonths(1));
-        project.setStatus("in-progress");
+        project.setStatus(ProjectStatus.IN_PROGRESS);
         project.setClient(savedClient);
 
         Project savedProject = projectRepository.save(project);
@@ -72,7 +73,7 @@ public class ProjectRepositoryTest {
         project.setDescription("Build a mobile app");
         project.setStartDate(LocalDate.now());
         project.setDeadline(LocalDate.now().plusMonths(2));
-        project.setStatus("pending");
+        project.setStatus(ProjectStatus.IDLE);
         project.setClient(savedClient);
 
         Project savedProject = projectRepository.save(project);
@@ -92,7 +93,7 @@ public class ProjectRepositoryTest {
         project1.setId(1L);
         project1.setTitle("Project 1");
         project1.setClient(client);
-        project1.setStatus("in-progress");
+        project1.setStatus(ProjectStatus.IN_PROGRESS);
         project1.setStartDate(LocalDate.now().minusMonths(1));
         project1.setDeadline(LocalDate.now().plusMonths(1));
         project1.setDescription("Description 1");
@@ -101,7 +102,7 @@ public class ProjectRepositoryTest {
         project2.setId(2L);
         project2.setTitle("Project 2");
         project2.setClient(client);
-        project2.setStatus("pending");
+        project2.setStatus(ProjectStatus.COMPLETE);
         project2.setStartDate(LocalDate.now().minusMonths(1));
         project2.setDeadline(LocalDate.now().plusMonths(1));
         project2.setDescription("Description 1");
@@ -111,7 +112,7 @@ public class ProjectRepositoryTest {
         projectRepository.save(project2);
 
         // When: Call the method to test
-        List<Project> projects = projectRepository.findAllByClientId(client.getId());
+        List<Project> projects = projectRepository.findAllByClientId(client.getId()).get();
 
         // Then: Validate the results
         assertThat(projects).hasSize(2);

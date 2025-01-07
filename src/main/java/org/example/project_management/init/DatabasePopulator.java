@@ -1,9 +1,6 @@
 package org.example.project_management.init;
 
-import org.example.project_management.entity.Client;
-import org.example.project_management.entity.Invoice;
-import org.example.project_management.entity.Project;
-import org.example.project_management.entity.ProjectTask;
+import org.example.project_management.entity.*;
 import org.example.project_management.entity.auth.Role;
 import org.example.project_management.entity.auth.User;
 import org.example.project_management.repository.ClientRepository;
@@ -89,7 +86,7 @@ public class DatabasePopulator {
                 project.setTitle("Project " + j + " for Client " + i);
                 project.setClient(client);
                 project.setDescription("Description for Project " + j);
-                project.setStatus("In Progress");
+                project.setStatus(ProjectStatus.IN_PROGRESS);
                 project.setStartDate(LocalDate.now().minusDays(j));
                 project.setDeadline(LocalDate.now().plusDays(j * 5));
 
@@ -98,7 +95,7 @@ public class DatabasePopulator {
                 for (int k = 1; k <= 5; k++) {
                     ProjectTask task = new ProjectTask();
                     task.setTitle("Task " + k + " for Project " + j);
-                    task.setStatus("In Progress");
+                    task.setStatus(TaskStatus.IN_PROGRESS);
                     task.setDescription("Description for Task " + k);
                     task.setDueDate(LocalDate.now().plusDays(k * 2));
                     task.setProject(project);
@@ -111,7 +108,7 @@ public class DatabasePopulator {
                 for (int l = 1; l <= 3; l++) {
                     Invoice invoice = new Invoice();
                     invoice.setAmount(1000.00 + l);
-                    invoice.setStatus("Pending");
+                    invoice.setStatus(InvoiceStatus.ISSUED);
                     invoice.setDueDate(LocalDate.now().plusDays(l * 10));
                     invoice.setProject(project);
                     invoices.add(invoice);

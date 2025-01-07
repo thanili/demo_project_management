@@ -10,4 +10,5 @@ public interface ProjectService {
     Project getProjectById(Long id);
     Project updateProject(Long id, Project projectDetails);
     void deleteProject(Long id);
+    List<Project> getClientProjectsByClientId(Long clientId);
 }

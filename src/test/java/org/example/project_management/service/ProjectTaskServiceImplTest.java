@@ -1,7 +1,9 @@
 package org.example.project_management.service;
 
 import org.example.project_management.entity.Project;
+import org.example.project_management.entity.ProjectStatus;
 import org.example.project_management.entity.ProjectTask;
+import org.example.project_management.entity.TaskStatus;
 import org.example.project_management.exception.ProjectTaskNotFoundException;
 import org.example.project_management.repository.ProjectTaskRepository;
 import org.example.project_management.service.impl.ProjectTaskServiceImpl;
@@ -34,13 +36,13 @@ public class ProjectTaskServiceImplTest {
         project.setId(1L);
         project.setStartDate(java.time.LocalDate.now().minusMonths(1));
         project.setDeadline(java.time.LocalDate.now().plusMonths(1));
-        project.setStatus("IN_PROGRESS");
+        project.setStatus(ProjectStatus.IN_PROGRESS);
         project.setTitle("Project 1");
 
         projectTask = new ProjectTask();
         projectTask.setId(1L);
         projectTask.setTitle("Project Task 1");
-        projectTask.setStatus("IN_PROGRESS");
+        projectTask.setStatus(TaskStatus.COMPLETE);
         projectTask.setDescription("Description 1");
         projectTask.setDueDate(java.time.LocalDate.now().plusDays(10));
         projectTask.setProject(project);

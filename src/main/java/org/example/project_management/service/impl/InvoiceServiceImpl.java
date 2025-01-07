@@ -76,4 +76,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = getInvoiceById(id);
         invoiceRepository.delete(invoice);
     }
+
+    @Override
+    public List<Invoice> getInvoicesByProjectId(Long projectId) {
+        logger.info("Getting invoices of project: {}", projectId);
+        return invoiceRepository.findAllByProjectId(projectId)
+                .orElseThrow(() -> new InvoiceNotFoundException("Invoices not found for project: " + projectId));
+    }
 }

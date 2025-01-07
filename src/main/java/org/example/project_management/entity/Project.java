@@ -3,13 +3,16 @@ package org.example.project_management.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "\"project\"")
 public class Project {
@@ -22,12 +25,15 @@ public class Project {
 
     private String description;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
 
-    @NotBlank(message = "Status is mandatory")
-    private String status;
+    //@NotBlank(message = "Status is mandatory")
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)

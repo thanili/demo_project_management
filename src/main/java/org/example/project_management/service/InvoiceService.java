@@ -10,4 +10,5 @@ public interface InvoiceService {
     Invoice getInvoiceById(Long id);
     Invoice updateInvoice(Long id, Invoice invoiceDetails);
     void deleteInvoice(Long id);
+    List<Invoice> getInvoicesByProjectId(Long projectId);
 }

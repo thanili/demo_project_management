@@ -1,7 +1,9 @@
 package org.example.project_management.service;
 
 import org.example.project_management.entity.Invoice;
+import org.example.project_management.entity.InvoiceStatus;
 import org.example.project_management.entity.Project;
+import org.example.project_management.entity.ProjectStatus;
 import org.example.project_management.exception.InvoiceNotFoundException;
 import org.example.project_management.repository.InvoiceRepository;
 import org.example.project_management.service.impl.InvoiceServiceImpl;
@@ -34,13 +36,13 @@ public class InvoiceServiceImplTest {
         project.setId(1L);
         project.setStartDate(java.time.LocalDate.now().minusMonths(1));
         project.setDeadline(java.time.LocalDate.now().plusMonths(1));
-        project.setStatus("IN_PROGRESS");
+        project.setStatus(ProjectStatus.IN_PROGRESS);
         project.setTitle("Project 1");
 
         invoice = new Invoice();
         invoice.setId(1L);
         invoice.setAmount(1000.0);
-        invoice.setStatus("PAID");
+        invoice.setStatus(InvoiceStatus.PAID);
         invoice.setDueDate(java.time.LocalDate.now());
         invoice.setProject(project);
     }

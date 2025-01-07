@@ -2,6 +2,7 @@ package org.example.project_management.service;
 
 import org.example.project_management.entity.Client;
 import org.example.project_management.entity.Project;
+import org.example.project_management.entity.ProjectStatus;
 import org.example.project_management.exception.ProjectNotFoundException;
 import org.example.project_management.repository.ProjectRepository;
 import org.example.project_management.service.impl.ProjectServiceImpl;
@@ -39,7 +40,7 @@ public class ProjectServiceImplTest {
         project = new Project();
         project.setId(1L);
         project.setTitle("Project 1");
-        project.setStatus("IN_PROGRESS");
+        project.setStatus(ProjectStatus.IN_PROGRESS);
         project.setDeadline(java.time.LocalDate.now().plusMonths(1));
         project.setStartDate(java.time.LocalDate.now().minusMonths(1));
         project.setDescription("Description 1");

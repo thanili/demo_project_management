@@ -3,6 +3,7 @@ package org.example.project_management.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.project_management.dto.ProjectTaskDto;
 import org.example.project_management.entity.ProjectTask;
+import org.example.project_management.entity.TaskStatus;
 import org.example.project_management.helper.EntityDtoConverter;
 import org.example.project_management.security.JwtUtils;
 import org.example.project_management.service.ProjectTaskService;
@@ -57,7 +58,7 @@ public class ProjectTaskControllerTest {
         projectTask.setTitle("Task 1");
         projectTask.setDescription("Description 1");
         projectTask.setDueDate(LocalDate.now().plusDays(10));
-        projectTask.setStatus("In Progress");
+        projectTask.setStatus(TaskStatus.IN_PROGRESS);
 
         projectTaskDto =
                 new ProjectTaskDto(1L,

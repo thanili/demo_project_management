@@ -1,8 +1,6 @@
 package org.example.project_management.repository;
 
-import org.example.project_management.entity.Client;
-import org.example.project_management.entity.Project;
-import org.example.project_management.entity.ProjectTask;
+import org.example.project_management.entity.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -37,7 +35,7 @@ public class TaskRepositoryTest {
         project.setDescription("Build the backend of the system");
         project.setStartDate(LocalDate.now());
         project.setDeadline(LocalDate.now().plusMonths(1));
-        project.setStatus("in-progress");
+        project.setStatus(ProjectStatus.IN_PROGRESS);
         project.setClient(savedClient);
 
         Project savedProject = projectRepository.save(project);
@@ -46,7 +44,7 @@ public class TaskRepositoryTest {
         task.setTitle("Setup Database");
         task.setDescription("Configure database for the project");
         task.setDueDate(LocalDate.now().plusWeeks(1));
-        task.setStatus("pending");
+        task.setStatus(TaskStatus.IN_PROGRESS);
         task.setProject(savedProject);
 
         ProjectTask savedTask = taskRepository.save(task);
@@ -68,7 +66,7 @@ public class TaskRepositoryTest {
         project.setDescription("Build a mobile app");
         project.setStartDate(LocalDate.now());
         project.setDeadline(LocalDate.now().plusMonths(2));
-        project.setStatus("pending");
+        project.setStatus(ProjectStatus.IDLE);
         project.setClient(savedClient);
 
         Project savedProject = projectRepository.save(project);
@@ -77,14 +75,14 @@ public class TaskRepositoryTest {
         task1.setTitle("Setup API");
         task1.setDescription("Set up the API backend");
         task1.setDueDate(LocalDate.now().plusWeeks(2));
-        task1.setStatus("in-progress");
+        task1.setStatus(TaskStatus.IN_PROGRESS);
         task1.setProject(savedProject);
 
         ProjectTask task2 = new ProjectTask();
         task2.setTitle("Create UI Design");
         task2.setDescription("Design the user interface");
         task2.setDueDate(LocalDate.now().plusWeeks(3));
-        task2.setStatus("pending");
+        task2.setStatus(TaskStatus.IDLE);
         task2.setProject(savedProject);
 
         taskRepository.saveAll(List.of(task1, task2));

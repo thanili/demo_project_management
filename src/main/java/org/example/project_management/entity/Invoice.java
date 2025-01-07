@@ -1,10 +1,10 @@
 package org.example.project_management.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -20,10 +20,11 @@ public class Invoice {
     @NotNull(message = "Amount is mandatory")
     private Double amount;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
 
-    @NotBlank(message = "Status is mandatory")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus status;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)

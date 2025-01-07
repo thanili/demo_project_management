@@ -3,6 +3,7 @@ package org.example.project_management.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.project_management.dto.InvoiceDto;
 import org.example.project_management.entity.Invoice;
+import org.example.project_management.entity.InvoiceStatus;
 import org.example.project_management.helper.EntityDtoConverter;
 import org.example.project_management.security.JwtUtils;
 import org.example.project_management.service.InvoiceService;
@@ -53,7 +54,7 @@ public class InvoiceControllerTest {
         invoice = new Invoice();
         invoice.setId(1L);
         invoice.setAmount(1000.0);
-        invoice.setStatus("PAID");
+        invoice.setStatus(InvoiceStatus.CANCELLED);
         invoice.setDueDate(LocalDate.now());
 
         invoiceDto = new InvoiceDto(invoice.getId(),

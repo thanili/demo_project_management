@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link th:href="@{/css/form-stylesheet.css}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Edit Project</title>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" th:href="@{/hub/clients}">Clients</a>
+    </div>
+    <div class="container">
+        <h2 th:text="${project.id != null ? 'Edit Project' : 'Add New Project'}">Edit Project</h2>
+        <form method="post" th:object="${project}" th:action="@{/hub/projects/handleSubmit}">
+            <label>Title</label><input type="text" placeholder="Title" th:field="*{title}" required>
+            <label>Description</label><input type="text" placeholder="Description" th:field="*{description}" required>
+            <!--<label>Status</label><input type="text" placeholder="Status" th:field="*{status}" required>-->
+            <select th:field="*{status}">
+                <option th:each="status : ${T(org.example.project_management.entity.ProjectStatus).values()}"
+                        th:value="${status}"
+                        th:text="${status.displayName}">
+                </option>
+            </select>
+            <label>Start</label><input type="date" placeholder="Start Date" th:field="*{startDate}" required>
+            <label>Deadline</label><input type="date" placeholder="Deadline" th:field="*{deadline}" required>
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{client.id}">
+            <br><br>
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+</body>
+</html>

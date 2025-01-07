@@ -79,4 +79,11 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
         ProjectTask projectTask = getProjectTaskById(id);
         projectTaskRepository.delete(projectTask);
     }
+
+    @Override
+    public List<ProjectTask> getProjectTasksByProjectId(Long projectId) {
+        logger.info("Getting project tasks of project: {}", projectId);
+        return projectTaskRepository.findAllByProjectId(projectId)
+                .orElseThrow(() -> new ProjectTaskNotFoundException("Project tasks not found for project: " + projectId));
+    }
 }

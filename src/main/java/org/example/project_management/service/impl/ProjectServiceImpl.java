@@ -98,4 +98,11 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = getProjectById(id);
         projectRepository.delete(project);
     }
+
+    @Override
+    public List<Project> getClientProjectsByClientId(Long clientId) {
+        logger.info("Getting projects of client: {}", clientId);
+        return projectRepository.findAllByClientId(clientId)
+                .orElseThrow(() -> new ProjectNotFoundException("Projects not found for client: " + clientId));
+    }
 }

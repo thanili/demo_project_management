@@ -1,10 +1,12 @@
 package org.example.project_management.configuration;
 
+import org.example.project_management.filter.AuthenticatedUserFilter;
 import org.example.project_management.filter.JwtAuthenticationFilter;
 import org.example.project_management.security.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,55 +26,87 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final AuthenticatedUserFilter authenticatedUserFilter;
 
     /**
      * Constructor for SecurityConfiguration.
      *
-     * @param jwtAuthenticationFilter the JWT authentication filter
-     * @param userDetailsService the user details service
+     * @param jwtAuthenticationFilter        the JWT authentication filter
+     * @param userDetailsService             the user details service
      * @param customAuthenticationEntryPoint the custom authentication entry point
      */
     @Autowired
-    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter,
+                                 UserDetailsService userDetailsService,
+                                 CustomAuthenticationEntryPoint customAuthenticationEntryPoint, AuthenticatedUserFilter authenticatedUserFilter
+    ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.authenticatedUserFilter = authenticatedUserFilter;
     }
 
     /**
-     * Configures the security filter chain.
+     * Configures the security filter chain for the API.
      *
      * @param http the HttpSecurity object
      * @return the configured SecurityFilterChain
      * @throws Exception if an error occurs
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Disable CSRF for stateless APIs
+                .securityMatcher("/api/**")
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // Define authorization rules
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**").permitAll() // Public access to authentication endpoints
-                        .requestMatchers("/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**").permitAll() // Allow access to Swagger UI and OpenAPI docs
-                        .anyRequest().authenticated() // Secure all other endpoints
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/resources/**", "/static/**", "/css/**", "/favicon.ico").permitAll()
+                        .anyRequest().authenticated()
                 )
-
-                // SessionCreationPolicy.STATELESS ensures that no HTTP sessions are created, as JWT is stateless and doesn't rely on sessions.
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
-                // Add the JWT authentication filter before the UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
-                // Set the custom authentication entry point
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                 );
+
+        return http.build();
+    }
+
+    /**
+     * Configures the security filter chain for the UI.
+     *
+     * @param http the HttpSecurity object
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs
+     */
+    @Bean
+    @Order(2)
+    public SecurityFilterChain uiSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/hub/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/hub/login", "/resources/**", "/static/**", "/css/**", "/favicon.ico").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/hub/login")
+                        .defaultSuccessUrl("/hub/clients", true)
+                        .failureUrl("/hub/login?error") // Redirect here on failure
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/hub/logout")
+                        .logoutSuccessUrl("/hub/login?logout")
+                        .permitAll()
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
+                .addFilterBefore(authenticatedUserFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

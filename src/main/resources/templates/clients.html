@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link th:href="@{/css/list-stylesheet.css}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Clients</title>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" th:href="@{/hub/clients}">Clients</a>
+        <!-- Logout Link -->
+        <a th:href="@{/hub/logout}" class="logout" style="float:right;">Logout</a>
+    </div>
+
+    <div class="container">
+
+        <h2>Clients</h2>
+
+        <!-- Toolbar Section -->
+        <div class="toolbar">
+            <a role="button" class="add-button" th:href="@{/hub/clients/new}">Add New Client</a>
+        </div>
+
+        <table id="table">
+            <tr class="head">
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th></th>
+            </tr>
+            <tr th:each="client : ${clients}">
+                <td th:text="${client.id}"></td>
+                <td th:text="${client.name}"></td>
+                <td th:text="${client.email}"></td>
+                <td th:text="${client.phone}"></td>
+                <td>
+                    <!-- Link to View Client's Projects -->
+                    <a role="button" class="update"
+                       th:href="@{/hub/clients/{id}/projects(id=${client.id})}">Projects</a>
+                    <!-- Link to Edit Client -->
+                    <a role="button" class="update"
+                       th:href="@{/hub/clients/{id}/edit(id=${client.id})}">Update</a>
+                    <!-- Link to Delete a Client -->
+                    <form th:action="@{/hub/clients/{id}/delete(id=${client.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="update">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

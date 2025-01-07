@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link th:href="@{/css/list-stylesheet.css}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Project Tasks</title>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" th:href="@{/hub/clients}">Clients</a>
+        <!-- Logout Link -->
+        <a th:href="@{/hub/logout}" class="logout" style="float:right;">Logout</a>
+    </div>
+
+    <div class="container">
+
+        <h2 th:text="'Project Tasks of project: ' + ${project.id}"></h2>
+
+        <!-- Toolbar Section -->
+        <div class="toolbar">
+            <a role="button" class="back-button" th:href="@{/hub/clients/{clientId}/projects(clientId=${project.client.id})}">Back</a>
+            <a role="button" class="add-button" th:href="@{/hub/projects/{projectId}/tasks/new(projectId=${project.id})}">Add New Task</a>
+        </div>
+
+        <table id="table">
+            <tr class="head">
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Deadline</th>
+                <th></th>
+            </tr>
+            <tr th:each="projectTask : ${projectTasks}">
+                <td th:text="${projectTask.id}"></td>
+                <td th:text="${projectTask.title}"></td>
+                <td th:text="${projectTask.description}"></td>
+                <td th:text="${projectTask.status.getDisplayName()}"></td>
+                <td th:text="${projectTask.dueDate}"></td>
+                <td>
+                    <!-- Link to Edit Project Task -->
+                    <a role="button" class="update"
+                       th:href="@{/hub/tasks/{id}/edit(id=${projectTask.id})}">Update</a>
+                    <!-- Link to Delete Project Task -->
+                    <form th:action="@{/hub/tasks/{id}/delete(id=${projectTask.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="update">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

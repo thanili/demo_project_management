@@ -1,8 +1,6 @@
 package org.example.project_management.repository;
 
-import org.example.project_management.entity.Client;
-import org.example.project_management.entity.Invoice;
-import org.example.project_management.entity.Project;
+import org.example.project_management.entity.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -33,14 +31,14 @@ public class InvoiceRepositoryTest {
 
         Project project = new Project();
         project.setTitle("Website Redesign");
-        project.setStatus("in-progress");
+        project.setStatus(ProjectStatus.IN_PROGRESS);
         project.setClient(client);
         projectRepository.save(project);
 
         Invoice invoice = new Invoice();
         invoice.setAmount(500.0);
         invoice.setDueDate(LocalDate.now());
-        invoice.setStatus("unpaid");
+        invoice.setStatus(InvoiceStatus.ISSUED);
         invoice.setProject(project);
 
         Invoice savedInvoice = invoiceRepository.save(invoice);
@@ -59,18 +57,18 @@ public class InvoiceRepositoryTest {
 
         Project project = new Project();
         project.setTitle("Website Redesign");
-        project.setStatus("in-progress");
+        project.setStatus(ProjectStatus.COMPLETE);
         project.setClient(client);
         projectRepository.save(project);
 
         Invoice invoice1 = new Invoice();
         invoice1.setAmount(500.0);
-        invoice1.setStatus("unpaid");
+        invoice1.setStatus(InvoiceStatus.ISSUED);
         invoice1.setProject(project);
 
         Invoice invoice2 = new Invoice();
         invoice2.setAmount(1000.0);
-        invoice2.setStatus("unpaid");
+        invoice2.setStatus(InvoiceStatus.ISSUED);
         invoice2.setProject(project);
 
         invoiceRepository.save(invoice1);
@@ -89,12 +87,12 @@ public class InvoiceRepositoryTest {
 
         Project project = new Project();
         project.setTitle("Website Redesign");
-        project.setStatus("in-progress");
+        project.setStatus(ProjectStatus.IN_PROGRESS);
         project.setClient(client);
         projectRepository.save(project);
 
         Invoice invoice = new Invoice();
-        invoice.setStatus("unpaid");
+        invoice.setStatus(InvoiceStatus.ISSUED);
         invoice.setAmount(500.0);
         invoice.setProject(project);
 
@@ -115,12 +113,12 @@ public class InvoiceRepositoryTest {
         Project project = new Project();
         project.setTitle("Website Redesign");
         project.setClient(client);
-        project.setStatus("in-progress");
+        project.setStatus(ProjectStatus.COMPLETE);
         projectRepository.save(project);
 
         Invoice invoice = new Invoice();
         invoice.setAmount(500.0);
-        invoice.setStatus("unpaid");
+        invoice.setStatus(InvoiceStatus.CANCELLED);
         invoice.setProject(project);
 
         Invoice savedInvoice = invoiceRepository.save(invoice);

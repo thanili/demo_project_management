@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link th:href="@{/css/list-stylesheet.css}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Invoices</title>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" th:href="@{/hub/clients}">Clients</a>
+        <!-- Logout Link -->
+        <a th:href="@{/hub/logout}" class="logout" style="float:right;">Logout</a>
+    </div>
+
+    <div class="container">
+
+        <h2 th:text="'Invoices of project: ' + ${project.id}"></h2>
+
+        <!-- Toolbar Section -->
+        <div class="toolbar">
+            <a role="button" class="back-button" th:href="@{/hub/clients/{clientId}/projects(clientId=${project.client.id})}">Back</a>
+            <a role="button" class="add-button" th:href="@{/hub/projects/{projectId}/invoices/new(projectId=${project.id})}">Add New Invoice</a>
+        </div>
+
+        <table id="table">
+            <tr class="head">
+                <th>Id</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th></th>
+            </tr>
+            <tr th:each="invoice : ${invoices}">
+                <td th:text="${invoice.id}"></td>
+                <td th:text="${invoice.amount}"></td>
+                <td th:text="${invoice.status.getDisplayName()}"></td>
+                <td th:text="${invoice.dueDate}"></td>
+                <td>
+                    <!-- Link to Edit Invoice -->
+                    <a role="button" class="update"
+                       th:href="@{/hub/invoices/{id}/edit(id=${invoice.id})}">Update</a>
+                    <!-- Link to Delete Project Invoice -->
+                    <form th:action="@{/hub/invoices/{id}/delete(id=${invoice.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="update">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
