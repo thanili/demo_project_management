@@ -2,6 +2,7 @@ package org.example.project_management.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,8 +22,11 @@ public class Project {
     private Long id;
 
     @NotBlank(message = "Title is mandatory")
+    @Size(min = 4, message = "Title is too short")
     private String title;
 
+    @NotBlank(message = "Description is mandatory")
+    @Size(min = 8, message = "Description is too short")
     private String description;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -31,7 +35,6 @@ public class Project {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
 
-    //@NotBlank(message = "Status is mandatory")
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 

@@ -12,9 +12,10 @@
     <div class="container">
         <h2 th:text="${projectTask.id != null ? 'Edit Task' : 'Add New Task'}">Edit Task</h2>
         <form method="post" th:object="${projectTask}" th:action="@{/hub/tasks/handleSubmit}">
-            <label>Title</label><input type="text" placeholder="Title" th:field="*{title}" required>
-            <label>Description</label><input type="text" placeholder="Description" th:field="*{description}" required>
-            <!--<label>Status</label><input type="text" placeholder="Status" th:field="*{status}" required>-->
+            <p style="color:red;" th:errors="*{title}"></p>
+            <label>Title</label><input type="text" placeholder="Title" th:field="*{title}">
+            <p style="color:red;" th:errors="*{description}"></p>
+            <label>Description</label><input type="text" placeholder="Description" th:field="*{description}">
             <select th:field="*{status}">
                 <option th:each="status : ${T(org.example.project_management.entity.TaskStatus).values()}"
                         th:value="${status}"

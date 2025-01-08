@@ -1,11 +1,13 @@
 package org.example.project_management.web;
 
+import jakarta.validation.Valid;
 import org.example.project_management.entity.Invoice;
 import org.example.project_management.entity.Project;
 import org.example.project_management.service.InvoiceService;
 import org.example.project_management.service.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +33,10 @@ public class InvoiceWebController {
     }
 
     @PostMapping("/invoices/handleSubmit")
-    public String submitForm(Invoice invoice) {
+    public String submitForm(@Valid Invoice invoice, BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "edit-invoice";
+
         if(invoice.getId() != null) {
             Invoice existingInvoice = invoiceService.getInvoiceById(invoice.getId());
             if (existingInvoice != null) {

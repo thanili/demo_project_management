@@ -78,7 +78,7 @@ public class DatabasePopulator {
             Client client = new Client();
             client.setName("Client " + i);
             client.setEmail("client" + i + "@example.com");
-            client.setPhone("123456789" + i);
+            client.setPhone("+30 12345678" + String.valueOf(i));
 
             List<Project> projects = new ArrayList<>();
             for (int j = 1; j <= 10; j++) {

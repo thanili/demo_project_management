@@ -1,5 +1,6 @@
 package org.example.project_management.web;
 
+import jakarta.validation.Valid;
 import org.example.project_management.api.ClientController;
 import org.example.project_management.entity.Client;
 import org.example.project_management.entity.Project;
@@ -10,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -59,7 +64,10 @@ public class ClientWebController {
     }
 
     @PostMapping("/clients/handleSubmit")
-    public String submitForm(Client client) {
+    public String submitForm(@Valid Client client, BindingResult bindingResult) {
+        if(bindingResult.hasErrors())
+            return "edit-client";
+
         if(client.getId() != null) {
             Client existingClient = clientService.getClientById(client.getId());
             if (existingClient != null)

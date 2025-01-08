@@ -12,9 +12,15 @@
     <div class="container">
         <h2 th:text="${client.id != null ? 'Edit Client' : 'Add New Client'}">Edit Client</h2>
         <form method="post" th:object="${client}" th:action="@{/hub/clients/handleSubmit}">
-            <label>Name</label><input type="text" placeholder="Name" th:field="*{name}" required>
-            <label>Email</label><input type="text" placeholder="Email" th:field="*{email}" required>
-            <label>Phone</label><input type="text" placeholder="Phone" th:field="*{phone}" required>
+            <p style="color:red;" th:errors="*{name}"></p>
+            <label>Name</label><input type="text" placeholder="Name" th:field="*{name}">
+
+            <p style="color:red;" th:errors="*{email}"></p>
+            <label>Email</label><input type="text" placeholder="Email" th:field="*{email}">
+
+            <p style="color:red;" th:errors="*{phone}"></p>
+            <label>Phone</label><input type="text" placeholder="Phone" th:field="*{phone}">
+
             <input type="hidden" th:field="*{id}">
             <br><br>
             <input type="submit" value="Submit" />

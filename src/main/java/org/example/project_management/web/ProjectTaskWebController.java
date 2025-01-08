@@ -1,11 +1,13 @@
 package org.example.project_management.web;
 
+import jakarta.validation.Valid;
 import org.example.project_management.entity.Project;
 import org.example.project_management.entity.ProjectTask;
 import org.example.project_management.service.ProjectService;
 import org.example.project_management.service.ProjectTaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +33,10 @@ public class ProjectTaskWebController {
     }
 
     @PostMapping("/tasks/handleSubmit")
-    public String submitForm(ProjectTask projectTask) {
+    public String submitForm(@Valid ProjectTask projectTask, BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "edit-task";
+
         if(projectTask.getId() != null) {
             ProjectTask existingProjectTask = projectTaskService.getProjectTaskById(projectTask.getId());
             if (existingProjectTask != null) {
