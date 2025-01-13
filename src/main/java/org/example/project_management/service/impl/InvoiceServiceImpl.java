@@ -83,4 +83,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findAllByProjectId(projectId)
                 .orElseThrow(() -> new InvoiceNotFoundException("Invoices not found for project: " + projectId));
     }
+
+
 }

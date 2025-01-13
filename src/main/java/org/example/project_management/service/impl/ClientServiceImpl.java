@@ -77,4 +77,13 @@ public class ClientServiceImpl implements ClientService {
         Client client = getClientById(id);
         clientRepository.delete(client);
     }
+
+    public void handleSubmitClient(Client client) {
+        if(client.getId() != null) {
+            Client existingClient = getClientById(client.getId());
+            if (existingClient != null)
+                client.setProjects(existingClient.getProjects());
+        }
+        saveClient(client);
+    }
 }

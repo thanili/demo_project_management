@@ -10,4 +10,5 @@ public interface ClientService {
     Client getClientById(Long id);
     Client updateClient(Long id, Client clientDetails);
     void deleteClient(Long id);
+    void handleSubmitClient(Client client);
 }

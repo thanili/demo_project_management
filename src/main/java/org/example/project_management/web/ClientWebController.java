@@ -3,10 +3,8 @@ package org.example.project_management.web;
 import jakarta.validation.Valid;
 import org.example.project_management.api.ClientController;
 import org.example.project_management.entity.Client;
-import org.example.project_management.entity.Project;
 import org.example.project_management.service.ClientService;
-import org.example.project_management.service.InvoiceService;
-import org.example.project_management.service.ProjectService;
+import org.example.project_management.service.ProjectCoordinatorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/hub")
 public class ClientWebController {
@@ -26,54 +22,38 @@ public class ClientWebController {
     private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
     private final ClientService clientService;
-    private final ProjectService projectService;
-    private final InvoiceService invoiceService;
+    private final ProjectCoordinatorService projectCoordinatorService;
 
-    public ClientWebController(ClientService clientService, ProjectService projectService, InvoiceService invoiceService) {
+    public ClientWebController(ClientService clientService, ProjectCoordinatorService projectCoordinatorService) {
         this.clientService = clientService;
-        this.projectService = projectService;
-        this.invoiceService = invoiceService;
+        this.projectCoordinatorService = projectCoordinatorService;
     }
 
     @GetMapping("/clients")
     public String getClients(Model model) {
-        List<Client> clients = clientService.getAllClients();
-        model.addAttribute("clients", clients);
+        model.addAttribute("clients", clientService.getAllClients());
         return "clients";
     }
 
     @GetMapping("/clients/{id}/edit")
     public String editClient(Model model, @PathVariable Long id) {
-        Client client = clientService.getClientById(id);
-        model.addAttribute("client", client);
+        model.addAttribute("client", clientService.getClientById(id));
         return "edit-client";
     }
 
     @GetMapping("/clients/{id}/projects")
     public String getClientProjects(Model model, @PathVariable Long id) {
-        List<Project> projects = projectService.getClientProjectsByClientId(id);
-        Client client = clientService.getClientById(id);
-        model.addAttribute("projects", projects);
-        model.addAttribute("client",client);
+        model.addAttribute("projects", projectCoordinatorService.getClientProjectsByClientId(id));
+        model.addAttribute("client",clientService.getClientById(id));
         return "client-projects";
     }
 
-    @GetMapping("/clients/{id}/invoices")
-    public String getClientInvoices(Model model, @PathVariable Long id) {
-        return "project-invoices";
-    }
-
-    @PostMapping("/clients/handleSubmit")
-    public String submitForm(@Valid Client client, BindingResult bindingResult) {
+    @PostMapping("/clients/save")
+    public String saveClient(@Valid Client client, BindingResult bindingResult) {
         if(bindingResult.hasErrors())
             return "edit-client";
 
-        if(client.getId() != null) {
-            Client existingClient = clientService.getClientById(client.getId());
-            if (existingClient != null)
-                client.setProjects(existingClient.getProjects());
-        }
-        clientService.saveClient(client);
+        clientService.handleSubmitClient(client);
         return "redirect:/hub/clients";
     }
 
@@ -85,8 +65,7 @@ public class ClientWebController {
 
     @GetMapping("/clients/new")
     public String newClientForm(Model model) {
-        Client newClient = new Client();
-        model.addAttribute("client", newClient);
+        model.addAttribute("client", new Client());
         return "/edit-client";
     }
 }
